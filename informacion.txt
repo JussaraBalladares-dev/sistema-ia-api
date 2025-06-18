@@ -1,0 +1,56 @@
+cd Prueba-IA-Tarea
+uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+uvicorn main:app --reload
+
+gunicorn --bind 0.0.0.0:8000 main:app
+/opt/python/3.11.11/bin/python -m pip install -r requirements.txt
+
+pip3.11 install --target="./.python_packages/lib/site-packages" -r requirements.txt
+
+##################################################################################################################
+
+https://chatgpt.com/c/67dce0f9-a62c-8005-84eb-fb1e0ff10606
+
+import pandas as pd
+
+data = pd.DataFrame([
+    {"usuario_id": 1, "prioridad": 5, "habilidad_requerida": "frontend", "tiempo_estimado": 4, "carga_trabajo_actual": 10},
+    {"usuario_id": 2, "prioridad": 3, "habilidad_requerida": "backend", "tiempo_estimado": 6, "carga_trabajo_actual": 18},
+    {"usuario_id": 2, "prioridad": 1, "habilidad_requerida": "backend", "tiempo_estimado": 6, "carga_trabajo_actual": 18},
+    {"usuario_id": 3, "prioridad": 1, "habilidad_requerida": "QA", "tiempo_estimado": 3, "carga_trabajo_actual": 5},
+])
+
+##################################################################################################################
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Suponiendo que tienes una columna 'usuario_asignado' como target
+data['usuario_asignado'] = [1, 2, 3, 4]  # target simulado
+
+# Codificar variables categóricas
+le = LabelEncoder()
+data['habilidad_requerida'] = le.fit_transform(data['habilidad_requerida'])
+
+X = data[['prioridad', 'habilidad_requerida', 'tiempo_estimado', 'carga_trabajo_actual']]
+y = data['usuario_asignado']
+
+# Entrenar modelo
+model = RandomForestClassifier()
+model.fit(X, y)
+
+##################################################################################################################
+
+nueva_tarea = pd.DataFrame([{
+    "prioridad": 4,
+    "habilidad_requerida": le.transform(["frontend"])[0],
+    "tiempo_estimado": 3,
+    "carga_trabajo_actual": 6
+}])
+
+usuario_sugerido = model.predict(nueva_tarea)
+print(f"Asignar tarea al usuario {usuario_sugerido}")
+
+
+
